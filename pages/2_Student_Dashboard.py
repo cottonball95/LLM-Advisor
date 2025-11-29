@@ -21,24 +21,8 @@ import psycopg2
 import socket
 
 def get_conn():
-    host = "db.lagyctcgaqulkpmflcjs.supabase.co"
+    return psycopg2.connect(st.secrets["connections"]["postgres_url"])
 
-    # Force IPv4 resolution to avoid "unknown server" errors
-    try:
-        host_ipv4 = socket.getaddrinfo(host, 5432, socket.AF_INET)[0][4][0]
-    except Exception as e:
-        print("IPv4 resolution failed:", e)
-        host_ipv4 = host  # fallback if lookup fails
-
-    conn = psycopg2.connect(
-        host=host_ipv4,
-        port=5432,
-        dbname="postgres",
-        user="postgres",
-        password="AIscheduler1!",
-        sslmode="require"
-    )
-    return conn
 
 
 # ==========================
