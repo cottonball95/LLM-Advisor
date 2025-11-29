@@ -1,0 +1,17 @@
+pip install openai
+
+
+
+from openai import OpenAI
+
+client = OpenAI(
+  api_key="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"
+)
+
+response = client.responses.create(
+  model="gpt-5-nano",
+  input="write a haiku about ai",
+  store=True,
+)
+
+print(response.output_text);

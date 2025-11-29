@@ -1,0 +1,53 @@
+course_id,title,credits,offered_fall,offered_spring,prerequisites,blocks,corequisite
+ENGL111,English 111,3,1,1,,General,
+MET240,Mechanical 240,3,1,1,,General,
+LA103,Liberal Arts 3,1,1,1,,Liberal Arts,
+LA101,Liberal Arts 2,1,1,1,,Liberal Arts,
+HB100,Human Behavior,3,1,1,,General,
+LA100,Liberal Arts,3,1,1,,Liberal Arts,
+GNRL 1ELE,General Something,3,1,1,,General,
+UNIV100,University Success,3,1,1,,General,
+MET120,Mechanical 120,3,1,1,,General,
+MATH163,Math 163,3,1,1,,General,
+ENGL110C,English1,3,1,1,,General,
+ENGN110,Explore Engineering and Technology,3,1,1,,Engineering Technology Fundamentals,
+STEM2ELE,Engineering Technology Info Literacy/Research,3,1,1,,Engineering Technology Fundamentals,
+MATH166,Precalculus II,5,1,1,,Mathamatics,
+MATH211,Calculus I,4,1,1,MATH166,Mathamatics,
+PHYS111N,Introductory General Physics,4,1,1,,Engineering Technology Fundamentals,
+BIOL124N,General Biology II Lecture and Lab,1,1,1,,Laboratory Science,BIOL 123N
+BIOL123N,General Biology II Lecture and Lab,3,1,1,,Laboratory Science,BIOL 124N
+PHYS112N,Introductory General Physics,3,1,1,PHYS111N,Engineering Technology Fundamentals,
+COMM101R,Public Speaking,3,1,1,,Engineering Technology Fundamentals,
+ENMA480,Ethics & Philosophy in Engineering,3,1,1,,Departmental Requirements,
+ENGT434,Introduction to Senior Project,3,1,1,EET310|EET312|EET320,Departmental Requirements,
+ENGT435W,Senior Design Project,3,1,1,ENGT434&ENGL111,Departmental Requirements,
+EET120,Logic Circuits & Microprocessors,3,1,1,,Embedded Systems Major Courses,EET 125
+EET125,Logic Circuits & Microprocessor Lab,1,1,1,,Embedded Systems Major Courses,EET 120
+EET110,Electrical Circuits I,4,1,1,,Embedded Systems Major Courses,
+EET200,Electrical Circuits II,3,1,1,,Embedded Systems Major Courses,
+EET205,Circuits Lab,1,1,1,,Embedded Systems Major Courses,EET 200
+ENGN2ELEA,Electronic Devices & Circuits I,4,1,1,,Embedded Systems Major Courses,ENGN 2ELEC
+ENGN2ELEB,Introduction to Microprocessors and Microcontrollers,3,1,1,,Embedded Systems Major Courses,
+ENGN2ELEC,Electronics Lab,1,1,1,,Embedded Systems Major Courses,ENGN2ELEA
+EET300,Advanced Circuit Analysis,3,1,1,EET200&MATH211,Embedded Systems Major Courses,
+EET210,Electrical 210,3,1,1,,Embedded Systems Major Courses,
+EET310,Digital Electronics,3,1,1,EET120&EET125&EET205&EET210,Embedded Systems Major Courses,EET 315
+EET315,Digital Electronics Lab,2,1,1,,Embedded Systems Major Courses,EET 310
+EET263,Introduction to Programmable Logic Controllers (PLCs),3,1,1,,Embedded Systems Major Courses,
+EET373,Instrumentation,3,1,1,EET210&EET263,Embedded Systems Major Courses,
+ENGT305,Advanced Technical Analysis,3,1,1,,Embedded Systems Major Courses,
+EET320,Microprocessors & Microcontrollers,3,1,1,,Embedded Systems Major Courses,EET 325
+EET325,Microprocessor Lab,2,1,1,,Embedded Systems Major Courses,EET 320
+EET330,Linear Electronics,3,1,1,MATH211,Embedded Systems Major Courses,EET 335
+EET312,Wireless Communication I,3,1,1,ENGT305&EET300,Embedded Systems Major Courses,
+EET335,Linear Electronics Lab,2,1,1,MATH211,Embedded Systems Major Courses,EET 330
+EET370,Energy and the Environment,3,1,1,,Embedded Systems Major Courses,
+EET470,Microcontrollers/Embedded-Based Designs,3,1,1,EET310&EET320&EET325,Embedded Systems Major Courses,
+EET412,WIRELESS COMMUNICATION SYS,3,1,1,ENGT305,Senior Electives,
+EET405,DATA COMM & COMPUTER NETWORKS,3,1,1,ENGT305,Senior Electives,
+EET420,ADVANCED LOGIC DESIGN,3,1,1,EET310&ENGT305,Senior Electives,
+EET430,ADVANCED MOTION CONTROL SYSTEM,3,1,1,ENGT305&EET360,Senior Electives,
+EET485,ELECTRICAL POWER SYSTEMS,3,1,1,EET360&ENGT305,Senior Electives,
+EET483,INTRODUCTION TO SMART GRIDS,3,1,1,EET360&ENGT305,Senior Electives,
+EET360,EET 360,3,1,1,,Outside Major,
