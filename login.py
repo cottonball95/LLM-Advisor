@@ -1,73 +1,89 @@
 import streamlit as st
 import psycopg2
-import hashlib
 
-import time
-
+# ==========================
+# DB CONNECTION (same as dashboards)
+# ==========================
 def get_conn():
-    for attempt in range(3):  # retry up to 3 times
-        try:
-            return psycopg2.connect(
-                "postgresql://postgres:AIscheduler1!@db.lagyctcgaqulkpmflcjs.supabase.co:5432/postgres?sslmode=require"
-            )
-        except psycopg2.OperationalError as e:
-            if attempt < 2:
-                time.sleep(2)
-            else:
-                raise e
+    return psycopg2.connect(
+        "postgresql://postgres:AIscheduler1!@db.lagyctcgaqulkpmflcjs.supabase.co:5432/postgres?sslmode=require"
+    )
 
-def hash_password(password):
-    return hashlib.sha256(password.encode()).hexdigest()
+# ==========================
+# LOGIN HELPER
+# ==========================
+def check_login(username: str, password: str):
+    """
+    Look up the user in the 'users' table using plain-text password
+    (per your professor's requirement for the class project).
+    """
+    conn = get_conn()
+    cur = conn.cursor()
+    cur.execute(
+        """
+        SELECT username, full_name, role
+        FROM users
+        WHERE username = %s AND password = %s;
+        """,
+        (username, password),
+    )
+    row = cur.fetchone()
+    cur.close()
+    conn.close()
 
-# top of login.py
-import streamlit as st
-from supabase import create_client, Client
-
-sb: Client = create_client(st.secrets["supabase"]["url"], st.secrets["supabase"]["anon_key"])
-
-def check_login(username, password):
-    # Plain text by prof requirement; OK for class demo
-    res = sb.table("users")\
-            .select("username, full_name, role")\
-            .eq("username", username)\
-            .eq("password", password)\
-            .single()\
-            .execute()
-
-    if res.data:
+    if row:
         return {
-            "username": res.data["username"],
-            "full_name": res.data["full_name"],
-            "role": res.data["role"],
+            "username": row[0],
+            "full_name": row[1],
+            "role": row[2],
         }
     return None
 
+# ==========================
+# STREAMLIT PAGE
+# ==========================
+st.set_page_config(page_title="LLM Advisor - Login", page_icon="🎓", layout="centered")
+st.title("🎓 Large Language Model-Based Academic Advising Assistant")
+st.subheader("Login")
 
-
-
-st.set_page_config(page_title="AI Academic Advisor Login", page_icon="🎓", layout="centered")
-st.title("🎓 AI Academic Advisor Login")
-
+# Initialize session
 if "user" not in st.session_state:
     st.session_state["user"] = None
 
+# If already logged in, show who & offer links
 if st.session_state["user"]:
-    st.success(f"Already logged in as {st.session_state['user']['full_name']} ({st.session_state['user']['role']})")
-    st.sidebar.page_link("pages/1_Advisor_Dashboard.py", label="Go to Advisor Dashboard")
-    st.sidebar.page_link("pages/2_Student_Dashboard.py", label="Go to Student Dashboard")
-    st.stop()
+    u = st.session_state["user"]
+    st.info(f"Already logged in as **{u['full_name']}** ({u['role']}).")
+    if u["role"] == "student":
+        st.page_link("pages/2_Student_Dashboard.py", label="➡ Go to Student Dashboard")
+    elif u["role"] == "advisor":
+        st.page_link("pages/1_Advisor_Dashboard.py", label="➡ Go to Advisor Dashboard")
+    st.divider()
 
-username = st.text_input("Username")
-password = st.text_input("Password", type="password")
+# Login form
+with st.form("login_form"):
+    username_input = st.text_input("Username")
+    password_input = st.text_input("Password", type="password")
+    submitted = st.form_submit_button("Log in")
 
-if st.button("Login"):
-    user = check_login(username, password)
-    if user:
-        st.session_state["user"] = user
-        st.success(f"Welcome, {user['full_name']}!")
-        if user["role"] == "advisor":
-            st.switch_page("pages/1_Advisor_Dashboard.py")
-        else:
-            st.switch_page("pages/2_Student_Dashboard.py")
+if submitted:
+    if not username_input or not password_input:
+        st.error("Please enter both username and password.")
     else:
-        st.error("Invalid username or password.")
+        user = check_login(username_input.strip(), password_input.strip())
+        if user:
+            st.session_state["user"] = user
+            st.success(f"Welcome, {user['full_name']}! Logged in as {user['role']}.")
+
+            # Redirect based on role
+            if user["role"] == "student":
+                st.switch_page("pages/2_Student_Dashboard.py")
+            elif user["role"] == "advisor":
+                st.switch_page("pages/1_Advisor_Dashboard.py")
+            else:
+                st.info("Logged in, but role is not mapped to a specific page.")
+        else:
+            st.error("Invalid username or password. Please try again.")
+
+st.markdown("---")
+st.caption("Use your assigned demo credentials for this ENGT 434/435 project.")
