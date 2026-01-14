@@ -2,7 +2,16 @@ import psycopg2
 import streamlit as st
 
 # Use connection info from .streamlit/secrets.toml
-CONN_STR = st.secrets["connections"]["postgres_url"]
+try:
+    CONN_STR = st.secrets["connections"]["postgres"]["url"]
+except (KeyError, AttributeError):
+    import os
+    CONN_STR = os.getenv("POSTGRES_URL", "")
+    if not CONN_STR:
+        raise ValueError(
+            "Database connection not configured. "
+            "Set POSTGRES_URL environment variable or configure Streamlit secrets."
+        )
 
 def get_conn():
     """Create a PostgreSQL connection."""
@@ -63,7 +72,16 @@ def init_db():
     );
     """)
 
-    # STUDENT PROGRESS
+    # STUDENT COURSES COMPLETED (used by Student Dashboard)
+    cur.execute("""
+    CREATE TABLE IF NOT EXISTS student_courses_completed (
+        student_username TEXT REFERENCES users(username) ON DELETE CASCADE,
+        course_id TEXT REFERENCES courses(course_id) ON DELETE CASCADE,
+        PRIMARY KEY (student_username, course_id)
+    );
+    """)
+
+    # STUDENT PROGRESS (alternative table, kept for compatibility)
     cur.execute("""
     CREATE TABLE IF NOT EXISTS student_progress (
         username TEXT REFERENCES users(username) ON DELETE CASCADE,
@@ -73,16 +91,13 @@ def init_db():
     );
     """)
 
-    # STUDENT CONSTRAINTS
+    # STUDENT CONSTRAINTS (used by Student Dashboard)
     cur.execute("""
     CREATE TABLE IF NOT EXISTS student_constraints (
         constraint_id SERIAL PRIMARY KEY,
-        username TEXT REFERENCES users(username) ON DELETE CASCADE,
-        scope TEXT CHECK (scope IN ('GLOBAL', 'TERM')) NOT NULL,
-        term_label TEXT,
-        key TEXT NOT NULL,
-        value JSONB NOT NULL,
-        enabled BOOLEAN DEFAULT TRUE,
+        student_username TEXT REFERENCES users(username) ON DELETE CASCADE,
+        label TEXT NOT NULL,
+        type TEXT NOT NULL,
         created_at TIMESTAMP DEFAULT NOW()
     );
     """)

@@ -5,9 +5,27 @@ import psycopg2
 # DB CONNECTION (same as dashboards)
 # ==========================
 def get_conn():
-    return psycopg2.connect(
-        "postgresql://postgres:AIscheduler1!@db.lagyctcgaqulkpmflcjs.supabase.co:5432/postgres?sslmode=require"
-    )
+    """
+    Create PostgreSQL connection using Streamlit secrets.
+    For local development, create .streamlit/secrets.toml with:
+    [connections.postgres]
+    url = "postgresql://user:password@host:port/dbname?sslmode=require"
+    """
+    try:
+        # Try to use Streamlit secrets (for Streamlit Cloud)
+        conn_str = st.secrets["connections"]["postgres"]["url"]
+        return psycopg2.connect(conn_str)
+    except (KeyError, AttributeError):
+        # Fallback for local development or if secrets not configured
+        import os
+        conn_str = os.getenv("POSTGRES_URL", "")
+        if conn_str:
+            return psycopg2.connect(conn_str)
+        else:
+            raise ValueError(
+                "Database connection not configured. "
+                "Set POSTGRES_URL environment variable or configure Streamlit secrets."
+            )
 
 # ==========================
 # LOGIN HELPER

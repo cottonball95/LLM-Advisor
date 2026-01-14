@@ -7,7 +7,13 @@ from datetime import datetime
 # ==========================
 # CONFIG
 # ==========================
-openai.api_key = st.secrets["openai"]["api_key"]
+try:
+    openai.api_key = st.secrets["openai"]["api_key"]
+except (KeyError, AttributeError):
+    import os
+    openai.api_key = os.getenv("OPENAI_API_KEY", "")
+    if not openai.api_key:
+        st.warning("⚠️ OpenAI API key not configured. LLM features will not work.")
 
 
 #import psycopg2
@@ -21,24 +27,27 @@ import psycopg2
 import socket
 
 def get_conn():
-    host = "db.lagyctcgaqulkpmflcjs.supabase.co"
-
-    # Force IPv4 resolution to avoid "unknown server" errors
+    """
+    Create PostgreSQL connection using Streamlit secrets.
+    For local development, create .streamlit/secrets.toml with:
+    [connections.postgres]
+    url = "postgresql://user:password@host:port/dbname?sslmode=require"
+    """
     try:
-        host_ipv4 = socket.getaddrinfo(host, 5432, socket.AF_INET)[0][4][0]
-    except Exception as e:
-        print("IPv4 resolution failed:", e)
-        host_ipv4 = host  # fallback if lookup fails
-
-    conn = psycopg2.connect(
-        host=host_ipv4,
-        port=5432,
-        dbname="postgres",
-        user="postgres",
-        password="AIscheduler1!",
-        sslmode="require"
-    )
-    return conn
+        # Try to use Streamlit secrets (for Streamlit Cloud)
+        conn_str = st.secrets["connections"]["postgres"]["url"]
+        return psycopg2.connect(conn_str)
+    except (KeyError, AttributeError):
+        # Fallback for local development or if secrets not configured
+        import os
+        conn_str = os.getenv("POSTGRES_URL", "")
+        if conn_str:
+            return psycopg2.connect(conn_str)
+        else:
+            raise ValueError(
+                "Database connection not configured. "
+                "Set POSTGRES_URL environment variable or configure Streamlit secrets."
+            )
 
 
 # ==========================
