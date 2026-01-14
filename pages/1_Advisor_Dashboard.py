@@ -9,8 +9,27 @@ import psycopg2
 import socket
 
 def get_conn():
-    return psycopg2.connect(st.secrets["connections"]["postgres_url"])
-
+    """
+    Create PostgreSQL connection using Streamlit secrets.
+    For local development, create .streamlit/secrets.toml with:
+    [connections.postgres]
+    url = "postgresql://user:password@host:port/dbname?sslmode=require"
+    """
+    try:
+        # Try to use Streamlit secrets (for Streamlit Cloud)
+        conn_str = st.secrets["connections"]["postgres"]["url"]
+        return psycopg2.connect(conn_str)
+    except (KeyError, AttributeError):
+        # Fallback for local development or if secrets not configured
+        import os
+        conn_str = os.getenv("POSTGRES_URL", "")
+        if conn_str:
+            return psycopg2.connect(conn_str)
+        else:
+            raise ValueError(
+                "Database connection not configured. "
+                "Set POSTGRES_URL environment variable or configure Streamlit secrets."
+            )
 
 # ==========================
 # PAGE SETUP AND LOGIN CHECK

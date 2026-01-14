@@ -1,0 +1,14 @@
+# Streamlit Configuration Example
+# Copy this file to .streamlit/config.toml and update with your values
+# DO NOT commit actual secrets to git!
+
+[server]
+headless = true
+port = 8501
+
+[browser]
+gatherUsageStats = false
+
+# Note: Actual secrets should be configured in .streamlit/secrets.toml
+# See .streamlit/secrets.toml.example for the secrets template
+

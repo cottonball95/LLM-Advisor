@@ -5,7 +5,19 @@ import json
 # Requires: pip install openai
 try:
     from openai import OpenAI
-    _client = OpenAI()
+    import streamlit as st
+    import os
+    
+    # Try to get API key from Streamlit secrets first, then environment variable
+    try:
+        api_key = st.secrets["openai"]["api_key"]
+    except (KeyError, AttributeError):
+        api_key = os.getenv("OPENAI_API_KEY", "")
+    
+    if api_key:
+        _client = OpenAI(api_key=api_key)
+    else:
+        _client = None
 except Exception:
     _client = None
 
