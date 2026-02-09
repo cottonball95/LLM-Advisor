@@ -1,5 +1,6 @@
 import streamlit as st
 from supabase import create_client, Client
+import httpx
 
 # -------------------------
 # Streamlit page setup
@@ -18,10 +19,29 @@ st.title("🎓 AI Academic Advisor Login")
 # [supabase]
 # url = "https://YOUR-PROJECT.supabase.co"
 # anon_key = "YOUR_ANON_KEY"
-sb: Client = create_client(
-    st.secrets["supabase"]["url"],
-    st.secrets["supabase"]["anon_key"]
-)
+
+# Initialize Supabase client with error handling
+try:
+    supabase_url = st.secrets["supabase"]["url"]
+    supabase_key = st.secrets["supabase"]["anon_key"]
+    
+    # Validate that secrets are not empty
+    if not supabase_url or not supabase_key:
+        st.error("❌ Supabase configuration is missing or empty. Please check your `.streamlit/secrets.toml` file.")
+        st.stop()
+    
+    # Debug: Show URL being used (can be removed later)
+    with st.sidebar:
+        st.caption(f"Connecting to: {supabase_url[:30]}...")
+    
+    sb: Client = create_client(supabase_url, supabase_key)
+except KeyError as e:
+    st.error(f"❌ Missing Supabase configuration in secrets: {e}")
+    st.info("Please ensure your `.streamlit/secrets.toml` file contains:\n```toml\n[supabase]\nurl = \"https://YOUR-PROJECT.supabase.co\"\nanon_key = \"YOUR_ANON_KEY\"\n```")
+    st.stop()
+except Exception as e:
+    st.error(f"❌ Failed to initialize Supabase client: {e}")
+    st.stop()
 
 # -------------------------
 # Login helper
@@ -31,22 +51,38 @@ def check_login(username: str, password: str):
     Checks the Supabase `users` table for a matching username + password.
     Returns a dict with username, full_name, and role if found, else None.
     """
-    res = (
-        sb.table("users")
-        .select("username, full_name, role")
-        .eq("username", username)
-        .eq("password", password)  # plain text by prof requirement
-        .single()
-        .execute()
-    )
+    try:
+        res = (
+            sb.table("users")
+            .select("username, full_name, role")
+            .eq("username", username)
+            .eq("password", password)  # plain text by prof requirement
+            .single()
+            .execute()
+        )
 
-    if res.data:
-        return {
-            "username": res.data["username"],
-            "full_name": res.data["full_name"],
-            "role": res.data["role"],
-        }
-    return None
+        if res.data:
+            return {
+                "username": res.data["username"],
+                "full_name": res.data["full_name"],
+                "role": res.data["role"],
+            }
+        return None
+    except httpx.ConnectError as e:
+        supabase_url = st.secrets["supabase"]["url"]
+        error_msg = f"❌ **Connection Error**: Cannot connect to Supabase.\n\n"
+        error_msg += f"**URL being used**: `{supabase_url}`\n\n"
+        error_msg += "**Possible causes:**\n"
+        error_msg += "1. **Supabase project is paused** (free tier projects pause after inactivity)\n"
+        error_msg += "   → Go to https://supabase.com/dashboard and resume your project\n"
+        error_msg += "2. **Network/DNS issues** - Check your internet connection\n"
+        error_msg += "3. **Incorrect URL** - Verify the URL in your Supabase dashboard\n"
+        error_msg += f"\n**Error details**: {str(e)}"
+        st.error(error_msg)
+        return None
+    except Exception as e:
+        st.error(f"❌ **Login Error**: {str(e)}")
+        return None
 
 # -------------------------
 # Session + UI
