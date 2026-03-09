@@ -1,0 +1,47 @@
+# AI Academic Advisor - Requirements File
+# Install with: pip install -r requirements3.txt
+
+# ============================================
+# Core Web Framework
+# ============================================
+streamlit==1.51.0
+
+# ============================================
+# Database Connectivity
+# ============================================
+# PostgreSQL adapter (binary version - easier to install, no compilation needed)
+psycopg2-binary>=2.9.0
+
+# ============================================
+# Supabase Integration
+# ============================================
+# Supabase Python client for authentication and database access
+supabase==2.3.5
+# HTTP client used by Supabase and directly in the code
+httpx>=0.27.0
+
+# ============================================
+# AI/LLM Integration
+# ============================================
+# OpenAI API client for AI-powered academic planning
+openai>=1.0.0
+
+# ============================================
+# Data Processing (Optional but recommended)
+# ============================================
+# Data manipulation library (useful for data processing)
+pandas==2.2.3
+
+# ============================================
+# Networking & Web
+# ============================================
+# WebSocket support
+websockets==12.0
+# HTTP library for API requests
+requests==2.32.3
+
+# ============================================
+# Configuration & Environment
+# ============================================
+# For loading environment variables from .env files
+python-dotenv>=1.0.0
