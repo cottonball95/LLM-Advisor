@@ -15,6 +15,14 @@ An AI-powered academic advising system built with Streamlit that helps students 
 - PostgreSQL database (Supabase recommended)
 - OpenAI API key (optional, for LLM features)
 
+## Create Virtual Environment
+Open command prompt and update the directory location: 
+cd "C:\path\to\your\project"
+
+python -m venv .venv
+.venv\Scripts\activate
+
+
 ## Local Installation
 
 1. **Clone the repository**
@@ -25,7 +33,7 @@ An AI-powered academic advising system built with Streamlit that helps students 
 
 2. **Install dependencies**
    ```bash
-   pip install -r requirements.txt
+   pip install -r requirements.lock.txt
    ```
 
 3. **Configure secrets**
