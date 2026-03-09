@@ -17,9 +17,11 @@ An AI-powered academic advising system built with Streamlit that helps students 
 
 ## Create Virtual Environment
 Open command prompt and update the directory location: 
+
 cd "C:\path\to\your\project"
 
 python -m venv .venv
+
 .venv\Scripts\activate
 
 
