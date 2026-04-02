@@ -21,3 +21,4 @@ python-dotenv==1.0.1
 
 # Data manipulation
 pandas==2.2.3
+psycopg2
