@@ -35,7 +35,7 @@ python -m venv .venv
 
 2. **Install dependencies**
    ```bash
-   pip install -r requirements_2.txt
+   pip install -r requirements.txt
    ```
 
 3. **Configure secrets**
