@@ -3,7 +3,7 @@ import streamlit as st
 
 # Use connection info from .streamlit/secrets.toml
 try:
-    CONN_STR = st.secrets["connections"]["postgres"]["url"]
+    CONN_STR = st.secrets["connections"]["postgres_url"]
 except (KeyError, AttributeError):
     import os
     CONN_STR = os.getenv("POSTGRES_URL", "")
