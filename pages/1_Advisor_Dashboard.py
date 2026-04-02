@@ -17,7 +17,7 @@ def get_conn():
     """
     try:
         # Try to use Streamlit secrets (for Streamlit Cloud)
-        conn_str = st.secrets["connections"]["postgres"]["url"]
+        conn_str = st.secrets["connections"]["postgres_url"]
         return psycopg2.connect(conn_str)
     except (KeyError, AttributeError):
         # Fallback for local development or if secrets not configured
