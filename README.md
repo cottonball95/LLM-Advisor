@@ -16,7 +16,7 @@ An AI-powered academic advising system built with Streamlit that helps students 
 - OpenAI API key (optional, for LLM features)
 
 ## Create Virtual Environment
-Open command prompt and update the directory location: 
+Create a folder for your project, Open command prompt and update the directory location: 
 
 cd "C:\path\to\your\project"
 
@@ -35,30 +35,14 @@ python -m venv .venv
 
 2. **Install dependencies**
    ```bash
-   pip install -r requirements.lock.txt
+   pip install -r requirements_2.txt
    ```
 
 3. **Configure secrets**
    
-   Create `.streamlit/secrets.toml` (copy from `.streamlit/secrets.toml.example`):
+   Create `.streamlit/secrets.toml` in the parent directory (create a folder called ".streamlit" and in that folder create a text file with the '.toml' extension:
    ```toml
-   [connections.postgres]
-   url = "postgresql://user:password@host:port/database?sslmode=require"
-   
-   [openai]
-   api_key = "sk-your-api-key-here"
-   ```
-   
-   Or set environment variables:
-   ```bash
-   # Windows PowerShell
-   $env:POSTGRES_URL="postgresql://..."
-   $env:OPENAI_API_KEY="sk-..."
-   
-   # Mac/Linux
-   export POSTGRES_URL="postgresql://..."
-   export OPENAI_API_KEY="sk-..."
-   ```
+  Paste the content from this file (https://drive.google.com/file/d/1oNGDBiUaSk4cW96DhTStIZ3w5sqmm8El/view?usp=drive_link)  into the secrets.toml file. This constains the API keys and database connections.
 
 4. **Initialize the database** (if needed)
    ```bash
